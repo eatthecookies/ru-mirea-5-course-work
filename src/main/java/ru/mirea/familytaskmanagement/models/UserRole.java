@@ -1,7 +1,7 @@
 package ru.mirea.familytaskmanagement.models;
 
 public enum UserRole {
-    PARENT,
+    ADULT,
     CHILD
 }
 

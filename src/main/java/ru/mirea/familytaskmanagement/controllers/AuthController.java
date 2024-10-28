@@ -23,7 +23,7 @@ public class AuthController {
     }
 
     @PostMapping("/auth/register")
-    public String registerUser(@RequestParam String username, @RequestParam String password, @RequestParam UserRole role, Model model) {
+    public String registerUser(@RequestParam String username, @RequestParam String password, @RequestParam("userType") UserRole role, Model model) {
 
         boolean registered = userService.registerUser(username, password, role);
 

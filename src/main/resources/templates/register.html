@@ -17,12 +17,26 @@
     <section class="form form--registration">
         <h2 class="form__title">Регистрация</h2>
         <form action="/auth/register" method="post">
+          
+          <div class="wrapper">
+            <input type="radio" name="userType" id="option-1" value="ADULT" checked>
+            <input type="radio" name="userType" id="option-2" value="CHILD">
+              <label for="option-1" class="option option-1">
+                <div class="dot"></div>
+                 <span>Взрослый</span>
+                 </label>
+              <label for="option-2" class="option option-2">
+                <div class="dot"></div>
+                 <span>Ребенок</span>
+              </label>
+          </div>
+          
           <input class="form__input" type="text" name="username" required  autocomplete="off" placeholder="Имя пользователя">
           <p class="form__error-text" th:if="${error}" th:text="${error}"></p> 
           <input class="form__input" type="password" name="password"  autocomplete="off" required placeholder="Пароль">
           <p th:if="${message}" th:text="${message}"></p> 
                     
-          <button class="form__btn" type="submit">Зарегистрироваться!</button>
+          <button class="form__btn" type="submit"><p>Зарегистрироваться!</p></button>
         </form>
       </section>
   </div>
