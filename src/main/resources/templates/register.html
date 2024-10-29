@@ -20,22 +20,44 @@
           
           <div class="wrapper">
             <input type="radio" name="userType" id="option-1" value="ADULT" checked>
+            <label for="option-1" class="option option-1">
+              <span>Взрослый</span>
+           </label>
             <input type="radio" name="userType" id="option-2" value="CHILD">
-              <label for="option-1" class="option option-1">
-                <div class="dot"></div>
-                 <span>Взрослый</span>
-                 </label>
-              <label for="option-2" class="option option-2">
-                <div class="dot"></div>
-                 <span>Ребенок</span>
-              </label>
+            <label for="option-2" class="option option-2">
+                <span>Ребенок</span>
+            </label>
           </div>
           
           <input class="form__input" type="text" name="username" required  autocomplete="off" placeholder="Имя пользователя">
           <p class="form__error-text" th:if="${error}" th:text="${error}"></p> 
           <input class="form__input" type="password" name="password"  autocomplete="off" required placeholder="Пароль">
           <p th:if="${message}" th:text="${message}"></p> 
-                    
+          
+          <div class="wrapper">
+            <input type="radio" name="action" id="option-3" value="join" checked>
+            <label for="option-3" class="option option-3">
+                <span>Присоединиться к семье</span>
+            </label>
+            
+            <input type="radio" name="action" id="option-4" value="create">
+            <label for="option-4" class="option option-4">
+                <span>Создать новую семью</span>
+            </label>
+        </div>
+        
+          <input class="form__input"  type="text" id="familyCode" name="familyCode" placeholder="Введите код семьи">
+          
+          
+          <script>
+            document.querySelectorAll('input[name="action"]').forEach((elem) => {
+            elem.addEventListener("change", function() {
+                const familyCodeField = document.getElementById("familyCode");
+                familyCodeField.style.display = this.value === "join" ? "block" : "none";
+            });
+            });
+          </script>
+          
           <button class="form__btn" type="submit"><p>Зарегистрироваться!</p></button>
         </form>
       </section>
