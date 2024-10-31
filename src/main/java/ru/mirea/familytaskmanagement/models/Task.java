@@ -1,5 +1,6 @@
 package ru.mirea.familytaskmanagement.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,6 +21,7 @@ public class Task {
     private String description;
     private TaskStatus status;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "tasks")
     private List<User> users;
 

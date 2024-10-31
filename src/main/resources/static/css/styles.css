@@ -23,7 +23,6 @@ nav a {
 }
 
 
-
 .form__input{
     font-family: "Inter";
     font-size: 16px;
@@ -49,7 +48,7 @@ nav a {
 }
 
 .form{
-    width: 50vh;
+    width: 50vw;
     border-radius: 24px;
     background-color: #f0f0f0;
     padding: 48px;
@@ -71,7 +70,7 @@ nav a {
     height: 48px;
     background-color: black;
     color: white;
-    
+    cursor: pointer;
 }
 
 .form__error-text{
@@ -143,9 +142,25 @@ nav a {
     width: 100%;
 }
 
+.tasks__item{
+    border-radius: 30px;
+    background-color: #0482ff69;
+    display: block;
+    padding: 20px 30px;
+    width: 100%;
+    margin-bottom: 10px;
+}
 
-
-
+.tasks_checkbox{
+    border: 1px black solid;
+    width: 25px;
+    height: 25px;
+}
+.tasks_checkbox:checked ~ .tasks__link-to-item{
+    color:grey;
+    text-decoration: line-through;
+    transition: 1s;
+}
 .wrapper {
     display: inline-flex;
     height: 50px;
@@ -215,4 +230,40 @@ nav a {
 .family-code.active {
     opacity: 1;
     max-height: 100px; /* Устанавливаем максимальную высоту, чтобы блок стал видимым */
+}
+
+
+.modal {
+    display: none; /* Модал скрыт по умолчанию */
+    position: fixed;
+    z-index: 1;
+    padding-top: 60px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4); /* Полупрозрачный черный фон */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
 }

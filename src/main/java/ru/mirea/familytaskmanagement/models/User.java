@@ -1,4 +1,6 @@
 package ru.mirea.familytaskmanagement.models;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,6 +21,7 @@ public class User {
     private UserRole role;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "family_id")
     private Family family;
 
@@ -29,4 +32,8 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "task_id")
     )
     private List<Task> tasks;
+
+    public void addTask(Task task){
+        tasks.add(task);
+    }
 }

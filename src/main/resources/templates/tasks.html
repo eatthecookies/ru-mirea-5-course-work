@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,55 +8,84 @@
   <title>Управление задачами</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="../static/css/reset.css">
   <link rel="stylesheet" href="../static/css/styles.css">
-  
+
   <link rel="stylesheet" href="/css/styles.css">
   <link rel="stylesheet" href="/css/reset.css">
 </head>
+
 <body>
 
-<main>
-  <div class="container">
-    
-    <aside class="sidebar">
-      <div class="sidebar__user-info">
-        <img class="sidebar__avatar" src="" alt="">
-        <p class="sidebar__role">Родитель</p>
-        <p class="sidebar__username">eatthecookies</p>
-      </div>
-      
-      <div class="sidebar__links">
-        <a class="sidebar__link" href="">Мои задачи</a>
-      </div>
-      
-      
+  <main>
+    <div class="container">
 
-    </aside>
+      <aside class="sidebar">
+        <div class="sidebar__user-info">
+          <img class="sidebar__avatar" src="" alt="">
+          <p class="sidebar__role">Родитель</p>
+          <p class="sidebar__username">eatthecookies</p>
+        </div>
+        <div class="sidebar__links">
+          <a class="sidebar__link" href="">Мои задачи</a>
+        </div>
+      </aside>
 
-    <div class="tasks">
-      <div class="tasks__item">
+      <div class="tasks">
+        <div th:each="task : ${tasks}" class="tasks__item" th:onclick="|showTaskDetails(${task.id})|">
+          <!-- чекбокс -->
+          <input class="tasks_checkbox" type="checkbox" th:checked="${task.status == 2}"
+            th:onclick="|stopPropagation(event)|">
+          <!-- название-ссылка -->
+          <a class="tasks__link-to-item" th:text="${task.title}">Название задачи</a>
 
+
+        </div>
+        <div id="taskModal" class="modal" style="display: none;">
+          <div class="modal-content">
+            <span class="close" th:onclick="closeModal()">&times;</span>
+            <h2 id="modalTaskTitle">Task Title</h2>
+            <p id="modalTaskDescription">Task Description</p>
+            <p id="modalTaskStatus">Task Status</p>
+          </div>
+        </div>
+
+        <a class="tasks__add-new-item" href="#">
+          Добавить новую задачу
+        </a>
       </div>
-      <a class="tasks__add-new-item" href="#">
-        Добавить новую задачу
-      </a>
     </div>
-    <!-- <form class="tasks">
-      <label for="taskTitle">Название задачи:</label>
-      <input type="text" id="taskTitle" name="taskTitle" required>
-  
-      <label for="taskDescription">Описание:</label>
-      <textarea id="taskDescription" name="taskDescription" required></textarea>
-  
-      <button type="submit">Добавить задачу</button>
-    </form> -->
 
-  </div>
-  
+    <script>
+      function stopPropagation(e) {
+      e.stopPropagation();
+   }
+      function showTaskDetails(taskId) {
+        fetch(`/api/tasks/details/${taskId}`)
+          .then(response => response.json())
+          .then(task => {
+            // Заполнение данных задачи в модальное окно
+            document.getElementById('modalTaskTitle').textContent = task.title;
+            document.getElementById('modalTaskDescription').textContent = task.description;
+            document.getElementById('modalTaskStatus').textContent = task.status;
 
-</main>
-<script src="../static/js/scripts.js"></script>
+            // Показать модальное окно
+            document.getElementById('taskModal').style.display = "block";
+          })
+          .catch(error => console.error('Ошибка при загрузке деталей задачи:', error));
+      }
+
+      function closeModal() {
+        document.getElementById('taskModal').style.display = "none";
+      }
+
+    </script>
+
+  </main>
+  <script src="../static/js/scripts.js"></script>
 </body>
+
 </html>

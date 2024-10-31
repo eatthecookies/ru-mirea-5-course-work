@@ -1,5 +1,7 @@
 package ru.mirea.familytaskmanagement.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,6 +20,7 @@ public class Family {
 
 
     @OneToMany(mappedBy = "family", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<User> users;
 
 }

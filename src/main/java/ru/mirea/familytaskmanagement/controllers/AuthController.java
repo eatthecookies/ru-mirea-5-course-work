@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller; // Импортируйте Controller
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @Controller // Измените на Controller
 public class AuthController {
     @Autowired
@@ -23,9 +25,14 @@ public class AuthController {
     }
 
     @PostMapping("/auth/register")
-    public String registerUser(@RequestParam String username, @RequestParam String password, @RequestParam("userType") UserRole role, Model model) {
+    public String registerUser(@RequestParam String username,
+                               @RequestParam String password,
+                               @RequestParam("userType") UserRole role,
+                               @RequestParam("action") String action,
+                               @RequestParam String familyCode,
+                               Model model) {
 
-        boolean registered = userService.registerUser(username, password, role);
+        boolean registered = userService.registerUser(username, password, role, familyCode);
 
         if (registered) {
             model.addAttribute("message", "User registered successfully!");
