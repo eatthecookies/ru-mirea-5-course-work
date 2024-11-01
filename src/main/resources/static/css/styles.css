@@ -83,7 +83,7 @@ nav a {
 
 .container {
     display: grid;
-    grid-template-columns: minmax(200px, 1fr) minmax(400px, 4fr);
+    grid-template-columns: minmax(300px, 2fr) minmax(300px, 4fr) minmax(300px, 4fr);
     width: 100%;
     height: 100%;
     column-gap: 30px;
@@ -98,6 +98,7 @@ nav a {
     display: flex;
     flex-direction: column;
     align-items: center;
+    /* justify-content: space-between; */
 }
 .sidebar__user-info {
     margin-bottom: 30%;
@@ -107,6 +108,7 @@ nav a {
     flex-direction: column;
     align-items: center;
 }
+
 .sidebar__user-info-group{
     display: flex;
     flex-direction: column;
@@ -135,6 +137,7 @@ nav a {
 }
 .sidebar__links{
     width: 100%;
+    margin-bottom: 20px;
 }
 .sidebar__link{
     display: block;
@@ -143,8 +146,27 @@ nav a {
     background-color: #a2afbd69;
     text-decoration: none;
     color: #000000;
+    margin-bottom: 5px;
+}
+.sidebar__code{
+    width: 100%;
+    margin-top: auto;
+    display: flex;
+    justify-content: center;
+    gap: 10%;
+}
+.sidebar__family{
+    display: flex;
+    align-items: center;
+    width: 90%;
+    justify-content: space-between;
+    margin-bottom: 10px;
 }
 
+.sidebar__family-username{
+    font-size: 17px;
+    font-weight: 600;
+}
 .tasks{
     justify-self: center;
     display: flex;
@@ -166,10 +188,12 @@ nav a {
 .tasks__item{
     border-radius: 30px;
     background-color: #a2afbd69;
-    display: block;
+    display: flex;
+    justify-content: space-between;
     padding: 20px 30px;
     width: 100%;
     margin-bottom: 10px;
+    align-items: center;
 }
 
 .tasks_checkbox{
@@ -319,8 +343,40 @@ nav a {
     outline: none;
 }
 
- 
+.TODO{
+    background-color: rgba(255, 196, 0, 0.43);
+    padding: 4px;
+    border-radius: 9px;
+    width: fit-content;
+}
+.Выполняется{
+    background-color: rgba(0, 13, 255, 0.28);
+    padding: 4px;
+    border-radius: 9px;
+    width: fit-content
+}
+.Готово{
+    background-color: rgba(4, 196, 10, 0.42);
+    padding: 4px;
+    border-radius: 9px;
+    width: fit-content
+}
 
+.Взрослый{
+    background-color: rgba(0, 13, 255, 0.28);
+    padding: 4px;
+    border-radius: 9px;
+    width: fit-content;
+    color: #474747;
+}
+
+.Ребенок{
+    background-color: rgba(4, 196, 10, 0.42);
+    padding: 4px;
+    border-radius: 9px;
+    width: fit-content;
+    color: #474747;
+}
 
 .modal__task-info-group{
     display: flex;

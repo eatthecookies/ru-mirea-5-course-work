@@ -24,46 +24,89 @@
 
       <aside class="sidebar">
         <div class="sidebar__user-info">
-          <!-- <img class="sidebar__avatar" src="../static/images/noavatar.svg"> -->
           <p class="sidebar__username" th:text="${username}">Александр</p>
-          <p class="sidebar__role" th:text="${role}">Родитель</p>
-
+          <p class="sidebar__role" th:class="${role}" th:text="${role}">Родитель</p>
         </div>
         <div class="sidebar__links">
           <a class="sidebar__link" href="">Мои задачи</a>
+          <a class="sidebar__link" href="">Мои задачи</a>
+        </div>
+
+        <div class="sidebar__family" th:each="user : ${familyUsers}">
+          <p class="sidebar__family-username" th:text="${user.username} " >Александр</p>
+          <p class="sidebar__role" th:class="${user.role}" th:text="${user.role}">Родитель</p>
+        </div>
+
+        <div class="sidebar__code">
+          <p>Семейный код:</p>
+          <p th:text="${code}">LHSD</p>
         </div>
       </aside>
 
 
-      <div class="tasks">
+      <div class="tasks tasks--my-tasks">
         <h1 class="task__title title">Мои задачи</h1>
+
         <div th:each="task : ${tasks}" class="tasks__item" th:onclick="|showTaskDetails(${task.id})|">
-          <input class="tasks_checkbox" type="checkbox" th:checked="${task.status == 2}"
-            th:onclick="|stopPropagation(event)|">
           <a class="tasks__link-to-item" th:text="${task.title}">Название задачи</a>
+          <p class="tasks__status" th:class="${task.status}" th:text="${task.status}">Готово</p>
         </div>
 
         <div id="taskModal" class="modal" style="display: none" th:onclick="|closeModal()|">
           <div class="modal__content" th:onclick="|stopPropagation(event)|" data-task-id="">
-            <input type="text" id="modal__title" value="Новая задача" th:onblur="|updateTask(this, 'title')|">
+            <input type="text" id="modal__title" value="Новая задача">
             <div class="modal__task-info-group">
               <label id="modal__status">Статус задачи
-                <select id="modal__status-select" th:onblur="|updateTask(this, 'status')|">
+                <select id="modal__status-select">
                   <option value="TODO">TODO</option>
-                  <option value="IN_PROGRESS">Выполняется</option>
-                  <option value="DONE">Сделана</option>
+                  <option value="Выполняется">Выполняется</option>
+                  <option value="Готово">Готово</option>
                 </select>
               </label>
               <label id="date-deadline"> Дата задачи <input type="date"></label>
             </div>
-            <textarea id="modal__description" class="text-area" th:onblur="|updateTask(this, 'description')|"></textarea>
+            <textarea id="modal__description" class="text-area"></textarea>
           </div>
         </div>
+
+
+        <div class="tasks__add-new-item" th:onclick="|showTaskDetails('new')|">
+          Добавить новую задачу
+        </div>
+
+      </div>
+      <div class="tasks tasks--my-tasks">
+        <h1 class="task__title title">Задачи семьи</h1>
+
+        <div th:each="task : ${familyTasks}" class="tasks__item" th:onclick="|showTaskDetails(${task.id})|">
+          <a class="tasks__link-to-item" th:text="${task.title}">Название задачи</a>
+          <p class="tasks__status" th:class="${task.status}" th:text="${task.status}">Готово</p>
+        </div>
+
+        <div id="taskModal" class="modal" style="display: none" th:onclick="|closeModal()|">
+          <div class="modal__content" th:onclick="|stopPropagation(event)|" data-task-id="">
+            <input type="text" id="modal__title" value="Новая задача">
+            <div class="modal__task-info-group">
+              <label id="modal__status">Статус задачи
+                <select id="modal__status-select">
+                  <option value="TODO">TODO</option>
+                  <option value="Выполняется">Выполняется</option>
+                  <option value="Готово">Готово</option>
+                </select>
+              </label>
+              <label id="date-deadline"> Дата задачи <input type="date"></label>
+            </div>
+            <textarea id="modal__description" class="text-area"></textarea>
+          </div>
+        </div>
+
+
+        <div class="tasks__add-new-item" th:onclick="|showTaskDetails('new')|">
+          Добавить новую задачу
+        </div>
+
       </div>
 
-      <div class="tasks__add-new-item" th:onclick="|showTaskDetails(${task.id})|">
-        Добавить новую задачу
-      </div>
     </div>
     </div>
 
@@ -78,9 +121,9 @@
             .then(task => {
               // Заполнение данных задачи в модальное окно
               document.getElementById('modal__title').value = task.title;
-              document.getElementById('modal__description').textContent = task.description;
-              document.getElementById('modal__status-select').value = task.status;
 
+              document.getElementById('modal__status-select').value = task.status;
+              document.getElementById('modal__description').value = task.description;
               // Установка ID задачи в атрибут data-task-id
               modalContent.setAttribute('data-task-id', taskId);
 
@@ -89,39 +132,76 @@
             })
             .catch(error => console.error('Ошибка при загрузке деталей задачи:', error));
         } else {
+
           modalContent.setAttribute('data-task-id', "new");
           modal.style.display = "block";
         }
       }
 
-      function updateTask(element, field) {
+      function updateTask() {
         const modalContent = document.querySelector('.modal__content');
-        const taskId = modalContent.getAttribute('data-task-id');
-        const value = element.value;
+        const taskId = modalContent.getAttribute('data-task-id'); // Получаем ID задачи из атрибута
 
-        const data = {};
-        data[field] = value;
+        // Собираем данные из всех полей модального окна
+        const title = document.getElementById('modal__title').value;
+        const description = document.getElementById('modal__description').value;
+        const status = document.getElementById('modal__status-select').value;
 
-        fetch(`/tasks/update/${taskId}`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(data)
-        })
-          .then(response => {
-            if (response.ok) {
-              console.log(`Task ${taskId} updated successfully`);
-            } else {
-              console.error(`Failed to update task ${taskId}`);
-            }
-          });
+        // Создаем объект данных
+        const data = {
+          title: title,
+          description: description,
+          status: status
+        };
+
+        if (taskId === "new") {
+          // Если ID задачи "new", создаем новую задачу
+          fetch(`/api/tasks/create`, {  // Измените URL на соответствующий для создания задачи
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)  // Отправляем объект данных в формате JSON
+          })
+            .then(response => {
+              if (response.ok) {
+                console.log("New task created successfully");
+                location.reload(); // Перезагружаем страницу, чтобы обновить список задач
+              } else {
+                console.error("Failed to create new task");
+              }
+            });
+        } else {
+          // Если задача уже существует, обновляем ее
+          fetch(`/api/tasks/update/${taskId}`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+          })
+            .then(response => {
+              if (response.ok) {
+                console.log(`Task ${taskId} updated successfully`);
+                location.reload(); // Перезагружаем страницу, чтобы обновить список задач
+              } else {
+                console.error(`Failed to update task ${taskId}`);
+              }
+            });
+        }
+      
       }
 
+
+
       function closeModal() {
+        updateTask();
         document.getElementById('taskModal').style.display = "none";
       }
 
+      function stopPropagation(event) {
+        event.stopPropagation();
+      }
 
     </script>
   </main>

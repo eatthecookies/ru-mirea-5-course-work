@@ -1,5 +1,6 @@
 package ru.mirea.familytaskmanagement.services;
 
+import ru.mirea.familytaskmanagement.models.Family;
 import ru.mirea.familytaskmanagement.models.Task;
 import ru.mirea.familytaskmanagement.models.TaskStatus;
 import ru.mirea.familytaskmanagement.models.User;
@@ -8,9 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.mirea.familytaskmanagement.repositories.UserRepository;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TaskService {
@@ -76,6 +79,21 @@ public class TaskService {
 
     public List<Task> getTasks() {
         User user = userService.getCurrentUser();
-        return user.getTasks();
+        return user.getTasks().stream()
+                .sorted(Comparator.comparing(Task::getId)) // Замените getTitle на нужное поле
+                .collect(Collectors.toList());
+    }
+
+    public List<Task> getFamilyTasks() {
+        User user = userService.getCurrentUser();
+        Family family = user.getFamily();
+        if (family != null) {
+            return family.getUsers().stream()
+                    .map(User::getTasks)
+                    .flatMap(List::stream)
+                    .sorted(Comparator.comparing(Task::getId))
+                    .collect(Collectors.toList());
+        }
+        return null;
     }
 }

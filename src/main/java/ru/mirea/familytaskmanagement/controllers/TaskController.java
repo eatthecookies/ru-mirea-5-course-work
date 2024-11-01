@@ -24,7 +24,7 @@ public class TaskController {
     private UserService userService;
 
     // Создание новой задачи
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<String> createTask(@RequestBody Task task) {
         taskService.createTask(task);
         return ResponseEntity.ok("Task created successfully!");
@@ -40,6 +40,7 @@ public class TaskController {
         Task task = taskService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         return ResponseEntity.ok(task);
     }
+
     @PatchMapping("/update/{id}")
     public ResponseEntity<String> updateTaskField(@PathVariable Long id, @RequestBody Map<String, Object> updates) {
         try {

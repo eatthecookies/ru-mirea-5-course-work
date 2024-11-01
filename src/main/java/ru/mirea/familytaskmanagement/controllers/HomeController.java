@@ -22,13 +22,17 @@ public class HomeController {
     @GetMapping("/tasks")
     public String getTasks(Model model) {
         List<Task> tasks = taskService.getTasks();
+        List<Task> familyTasks = taskService.getFamilyTasks();
+
         User user = userService.getCurrentUser();
-        if (user.getRole() == UserRole.CHILD) {
-            model.addAttribute("role", "Ребенок");
-        } else {
-            model.addAttribute("role", "Родитель");
-        }
+        List <User> familyUsers = user.getFamily().getUsers();
+        String familyCode = user.getFamily().getName();
+        model.addAttribute("role", user.getRole());
+
         model.addAttribute("username", user.getUsername());
         model.addAttribute("tasks", tasks);
+        model.addAttribute("familyTasks", familyTasks);
+        model.addAttribute("code", familyCode);
+        model.addAttribute("familyUsers", familyUsers);
         return "tasks";
     }}

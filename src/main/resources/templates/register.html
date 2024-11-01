@@ -19,11 +19,11 @@
         <form action="/auth/register" method="post">
           
           <div class="wrapper">
-            <input type="radio" name="userType" id="option-1" value="ADULT" checked>
+            <input type="radio" name="userType" id="option-1" value="Взрослый" checked>
             <label for="option-1" class="option option-1">
               <span>Взрослый</span>
            </label>
-            <input type="radio" name="userType" id="option-2" value="CHILD">
+            <input type="radio" name="userType" id="option-2" value="Ребенок">
             <label for="option-2" class="option option-2">
                 <span>Ребенок</span>
             </label>
@@ -32,19 +32,19 @@
           <input class="form__input" type="text" name="username" required  autocomplete="off" placeholder="Имя пользователя">
           <p class="form__error-text" th:if="${error}" th:text="${error}"></p> 
           <input class="form__input" type="password" name="password"  autocomplete="off" required placeholder="Пароль">
-          <p th:if="${message}" th:text="${message}"></p> 
-          
-          <div class="wrapper">
-            <input type="radio" name="action" id="option-3">
-            <label for="option-3" class="option option-3">
-                <span>Присоединиться к семье</span>
-            </label>
-            
-            <input type="radio" name="action" id="option-4">
-            <label for="option-4" class="option option-4">
-                <span>Создать новую семью</span>
-            </label>
-          </div>
+          <p th:if="${message}" th:text="${message}"></p>
+
+            <div class="wrapper">
+                <input type="radio" name="action" id="option-3" value="join" checked>
+                <label for="option-3" class="option option-3">
+                    <span>Присоединиться к семье</span>
+                </label>
+
+                <input type="radio" name="action" id="option-4" value="create">
+                <label for="option-4" class="option option-4">
+                    <span>Создать новую семью</span>
+                </label>
+            </div>
         
           <input class="form__input"  type="text" id="familyCode" name="familyCode" placeholder="Введите код семьи">
           
