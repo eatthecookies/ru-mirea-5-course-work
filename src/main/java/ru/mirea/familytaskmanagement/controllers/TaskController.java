@@ -13,13 +13,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import ru.mirea.familytaskmanagement.services.UserService;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/tasks")
 public class TaskController {
 
     @Autowired
-
     private TaskService taskService;
     private UserService userService;
 
@@ -39,6 +39,15 @@ public class TaskController {
     public ResponseEntity<Task> getTaskDetails(@PathVariable Long id) {
         Task task = taskService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         return ResponseEntity.ok(task);
+    }
+    @PatchMapping("/update/{id}")
+    public ResponseEntity<String> updateTaskField(@PathVariable Long id, @RequestBody Map<String, Object> updates) {
+        try {
+            taskService.updateTaskField(id, updates);
+            return ResponseEntity.ok("Task updated successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update task");
+        }
     }
 
 

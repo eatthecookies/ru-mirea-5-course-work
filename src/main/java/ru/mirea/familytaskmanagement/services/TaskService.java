@@ -1,6 +1,7 @@
 package ru.mirea.familytaskmanagement.services;
 
 import ru.mirea.familytaskmanagement.models.Task;
+import ru.mirea.familytaskmanagement.models.TaskStatus;
 import ru.mirea.familytaskmanagement.models.User;
 import ru.mirea.familytaskmanagement.repositories.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import ru.mirea.familytaskmanagement.repositories.UserRepository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -29,6 +31,20 @@ public class TaskService {
         user.addTask(task);
         userRepository.save(user);
 
+    }
+
+    public void updateTaskField(Long id, Map<String, Object> updates) {
+        Task task = taskRepository.findById(id).orElseThrow(() -> new RuntimeException("Task not found"));
+
+        updates.forEach((field, value) -> {
+            switch (field) {
+                case "title": task.setTitle((String) value); break;
+                case "description": task.setDescription((String) value); break;
+                case "status": task.setStatus(TaskStatus.valueOf((String) value)); break;
+            }
+        });
+
+        taskRepository.save(task);
     }
 
     public Optional<Task> findById(Long id) {

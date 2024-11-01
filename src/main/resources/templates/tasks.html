@@ -34,67 +34,94 @@
         </div>
       </aside>
 
+
       <div class="tasks">
+        <h1 class="task__title title">Мои задачи</h1>
         <div th:each="task : ${tasks}" class="tasks__item" th:onclick="|showTaskDetails(${task.id})|">
-          <!-- чекбокс -->
           <input class="tasks_checkbox" type="checkbox" th:checked="${task.status == 2}"
             th:onclick="|stopPropagation(event)|">
-          <!-- название-ссылка -->
           <a class="tasks__link-to-item" th:text="${task.title}">Название задачи</a>
-
-
         </div>
-        <div id="taskModal" class="modal" style="display: block" th:onclick="|closeModal()|">
-          <div class="modal__content" th:onclick="|stopPropagation(event)|">            
-            
-            <input type="text" id="modal__title"  value="Task title"></input>
-            
+
+        <div id="taskModal" class="modal" style="display: none" th:onclick="|closeModal()|">
+          <div class="modal__content" th:onclick="|stopPropagation(event)|" data-task-id="">
+            <input type="text" id="modal__title" value="Новая задача" th:onblur="|updateTask(this, 'title')|">
             <div class="modal__task-info-group">
               <label id="modal__status">Статус задачи
-              <select id="modal__status-select">
-              </option>
-              <option value="TODO">TODO</option>
-              <option value="IN_PROGRESS">Выполняется</option>
-              <option value="DONE">Сделана</option>
-              </select>
-            </label>
-
-            <label id="date-deadline"> Дата задачи <input type="date"></label>
+                <select id="modal__status-select" th:onblur="|updateTask(this, 'status')|">
+                  <option value="TODO">TODO</option>
+                  <option value="IN_PROGRESS">Выполняется</option>
+                  <option value="DONE">Сделана</option>
+                </select>
+              </label>
+              <label id="date-deadline"> Дата задачи <input type="date"></label>
             </div>
-            
-            
-            <textarea id="modal__description" class="text-area" name="comment">123</textarea>
+            <textarea id="modal__description" class="text-area" th:onblur="|updateTask(this, 'description')|"></textarea>
           </div>
         </div>
-
-        <a class="tasks__add-new-item" href="#">
-          Добавить новую задачу
-        </a>
       </div>
+
+      <div class="tasks__add-new-item" th:onclick="|showTaskDetails(${task.id})|">
+        Добавить новую задачу
+      </div>
+    </div>
     </div>
 
     <script>
-      function stopPropagation(e) {
-        e.stopPropagation();
-      }
       function showTaskDetails(taskId) {
-        fetch(`/api/tasks/details/${taskId}`)
-          .then(response => response.json())
-          .then(task => {
-            // Заполнение данных задачи в модальное окно
-            document.getElementById('modal__title').value = task.title;
-            document.getElementById('modal__description').textContent = task.description;
-            document.getElementById('modal__status-select').value = task.status;
+        const modal = document.getElementById('taskModal');
+        const modalContent = modal.querySelector('.modal__content');
 
-            // Показать модальное окно
-            document.getElementById('taskModal').style.display = "block";
-          })
-          .catch(error => console.error('Ошибка при загрузке деталей задачи:', error));
+        if (taskId !== "new") {
+          fetch(`/api/tasks/details/${taskId}`)
+            .then(response => response.json())
+            .then(task => {
+              // Заполнение данных задачи в модальное окно
+              document.getElementById('modal__title').value = task.title;
+              document.getElementById('modal__description').textContent = task.description;
+              document.getElementById('modal__status-select').value = task.status;
+
+              // Установка ID задачи в атрибут data-task-id
+              modalContent.setAttribute('data-task-id', taskId);
+
+              // Показать модальное окно
+              modal.style.display = "block";
+            })
+            .catch(error => console.error('Ошибка при загрузке деталей задачи:', error));
+        } else {
+          modalContent.setAttribute('data-task-id', "new");
+          modal.style.display = "block";
+        }
+      }
+
+      function updateTask(element, field) {
+        const modalContent = document.querySelector('.modal__content');
+        const taskId = modalContent.getAttribute('data-task-id');
+        const value = element.value;
+
+        const data = {};
+        data[field] = value;
+
+        fetch(`/tasks/update/${taskId}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        })
+          .then(response => {
+            if (response.ok) {
+              console.log(`Task ${taskId} updated successfully`);
+            } else {
+              console.error(`Failed to update task ${taskId}`);
+            }
+          });
       }
 
       function closeModal() {
         document.getElementById('taskModal').style.display = "none";
       }
+
 
     </script>
   </main>

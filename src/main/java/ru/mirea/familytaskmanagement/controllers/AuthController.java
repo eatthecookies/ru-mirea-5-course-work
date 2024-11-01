@@ -19,6 +19,7 @@ public class AuthController {
     public String login() {
         return "login";  // Имя вашего HTML-шаблона для страницы входа
     }
+
     @GetMapping("/register")
     public String showRegistrationForm() {
         return "register"; // Возвращает имя HTML-шаблона для регистрации
@@ -28,7 +29,6 @@ public class AuthController {
     public String registerUser(@RequestParam String username,
                                @RequestParam String password,
                                @RequestParam("userType") UserRole role,
-                               @RequestParam("action") String action,
                                @RequestParam String familyCode,
                                Model model) {
 

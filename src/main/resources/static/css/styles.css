@@ -125,7 +125,7 @@ nav a {
     padding: 4px;
     border-radius: 9px;
     width: fit-content;
-    color: #808080;
+    color: #474747;
 }
 
 .sidebar__username {
@@ -173,8 +173,13 @@ nav a {
 }
 
 .tasks_checkbox{
-    border: 1px black solid;
+    border: none;
+    /* outline: 1px solid #1e5180; */
+    accent-color: #2c292b;
+    border: 2px solid #c9c9c9;
+    background-color: #dedbdb;
     width: 25px;
+    /* box-shadow: -2px 0 5px rgba(0, 0, 0.23); */
     height: 25px;
 }
 .tasks_checkbox:checked ~ .tasks__link-to-item{
@@ -286,6 +291,7 @@ nav a {
     outline: none;
     border: solid 1px #f0f0f0;
     margin-bottom: 20px;
+    width: 100%;
 }
 
 #modal__description{
@@ -303,13 +309,18 @@ nav a {
     display: flex;
     justify-content: space-between;
     margin-bottom: 20px;
+    align-items: center;
 }
 
 #modal__status-select{
     font-size: 20px;
     text-decoration: none;
     border: none;
+    outline: none;
 }
+
+ 
+
 
 .modal__task-info-group{
     display: flex;
@@ -330,4 +341,9 @@ nav a {
     font-family: inherit;
     outline: none;
     font-size: inherit;
+}
+
+.task__title{
+    font-size: 30px;
+    margin-bottom: 20px;
 }
