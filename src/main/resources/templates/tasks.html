@@ -14,20 +14,20 @@
   <link rel="stylesheet" href="../static/css/reset.css">
   <link rel="stylesheet" href="../static/css/styles.css">
 
-  <link rel="stylesheet" href="/css/styles.css">
   <link rel="stylesheet" href="/css/reset.css">
+  <link rel="stylesheet" href="/css/styles.css">
 </head>
 
 <body>
-
   <main>
     <div class="container">
 
       <aside class="sidebar">
         <div class="sidebar__user-info">
-          <img class="sidebar__avatar" src="" alt="">
-          <p class="sidebar__role">Родитель</p>
-          <p class="sidebar__username">eatthecookies</p>
+          <!-- <img class="sidebar__avatar" src="../static/images/noavatar.svg"> -->
+          <p class="sidebar__username" th:text="${username}">Александр</p>
+          <p class="sidebar__role" th:text="${role}">Родитель</p>
+
         </div>
         <div class="sidebar__links">
           <a class="sidebar__link" href="">Мои задачи</a>
@@ -44,12 +44,26 @@
 
 
         </div>
-        <div id="taskModal" class="modal" style="display: none;">
-          <div class="modal-content">
-            <span class="close" th:onclick="closeModal()">&times;</span>
-            <h2 id="modalTaskTitle">Task Title</h2>
-            <p id="modalTaskDescription">Task Description</p>
-            <p id="modalTaskStatus">Task Status</p>
+        <div id="taskModal" class="modal" style="display: block" th:onclick="|closeModal()|">
+          <div class="modal__content" th:onclick="|stopPropagation(event)|">            
+            
+            <input type="text" id="modal__title"  value="Task title"></input>
+            
+            <div class="modal__task-info-group">
+              <label id="modal__status">Статус задачи
+              <select id="modal__status-select">
+              </option>
+              <option value="TODO">TODO</option>
+              <option value="IN_PROGRESS">Выполняется</option>
+              <option value="DONE">Сделана</option>
+              </select>
+            </label>
+
+            <label id="date-deadline"> Дата задачи <input type="date"></label>
+            </div>
+            
+            
+            <textarea id="modal__description" class="text-area" name="comment">123</textarea>
           </div>
         </div>
 
@@ -61,16 +75,16 @@
 
     <script>
       function stopPropagation(e) {
-      e.stopPropagation();
-   }
+        e.stopPropagation();
+      }
       function showTaskDetails(taskId) {
         fetch(`/api/tasks/details/${taskId}`)
           .then(response => response.json())
           .then(task => {
             // Заполнение данных задачи в модальное окно
-            document.getElementById('modalTaskTitle').textContent = task.title;
-            document.getElementById('modalTaskDescription').textContent = task.description;
-            document.getElementById('modalTaskStatus').textContent = task.status;
+            document.getElementById('modal__title').value = task.title;
+            document.getElementById('modal__description').textContent = task.description;
+            document.getElementById('modal__status-select').value = task.status;
 
             // Показать модальное окно
             document.getElementById('taskModal').style.display = "block";
@@ -83,7 +97,6 @@
       }
 
     </script>
-
   </main>
   <script src="../static/js/scripts.js"></script>
 </body>

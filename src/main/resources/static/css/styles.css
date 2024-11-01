@@ -99,22 +99,39 @@ nav a {
     flex-direction: column;
     align-items: center;
 }
-
 .sidebar__user-info {
-    margin-bottom: 30%;    
+    margin-bottom: 30%;
+    display: flex;
+    gap: 10%;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 }
+.sidebar__user-info-group{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+
 .sidebar__avatar{
-    border: #4c4e50 solid 1px;
-    border-radius: 100%;
-    height:100px;
-    width: 100px;
+    /* border: #4c4e50 solid 1px; */
+    /* border-radius: 100%; */
+    height:90%;
+    /* width: 100px; */
 }
 .sidebar__role {
-
+    background-color: rgba(0, 167, 0, 0.309);
+    padding: 4px;
+    border-radius: 9px;
+    width: fit-content;
+    color: #808080;
 }
 
 .sidebar__username {
-
+    font-weight: 600;
+    font-size: 30px;
+    margin-bottom: 10px;
 }
 .sidebar__links{
     width: 100%;
@@ -123,7 +140,9 @@ nav a {
     display: block;
     padding: 12px 16px;
     border-radius: 10px;
-    background-color: #378bdf;
+    background-color: #a2afbd69;
+    text-decoration: none;
+    color: #000000;
 }
 
 .tasks{
@@ -136,15 +155,17 @@ nav a {
 
 .tasks__add-new-item{
     border-radius: 30px;
-    background-color: #0482ff69;
+    background-color: #a2afbd69;
     display: block;
     padding: 20px 30px;
     width: 100%;
+    text-decoration: none;
+    color: #000000;
 }
 
 .tasks__item{
     border-radius: 30px;
-    background-color: #0482ff69;
+    background-color: #a2afbd69;
     display: block;
     padding: 20px 30px;
     width: 100%;
@@ -237,33 +258,76 @@ nav a {
     display: none; /* Модал скрыт по умолчанию */
     position: fixed;
     z-index: 1;
-    padding-top: 60px;
     left: 0;
     top: 0;
     width: 100%;
-    height: 100%;
-    overflow: auto;
+    height: 100%;    
     background-color: rgba(0,0,0,0.4); /* Полупрозрачный черный фон */
 }
 
-.modal-content {
+
+
+
+
+
+.modal__content {
     background-color: #fefefe;
-    margin: auto;
-    padding: 20px;
+    margin: 10vh auto; 
+    padding: 50px 40px;
+    border-radius: 10px;
     border: 1px solid #888;
-    width: 80%;
+    width: 50%;
 }
 
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
+#modal__title{
+    font-size: 40px;
+    font-weight: 700;
+    font-family: inherit;
+    outline: none;
+    border: solid 1px #f0f0f0;
+    margin-bottom: 20px;
 }
 
-.close:hover,
-.close:focus {
-    color: black;
+#modal__description{
+    width: 100%;
+    height: 100%;
+    font-size: 20px;
+    resize: none;
+    font-family: inherit;
+    outline: none;
+    border: solid 1px #f0f0f0;
+    height: 30vh;
+}
+
+#modal__status{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+#modal__status-select{
+    font-size: 20px;
     text-decoration: none;
-    cursor: pointer;
+    border: none;
+}
+
+.modal__task-info-group{
+    display: flex;
+    flex-direction: column;
+    width: 40vh;
+    margin-bottom: 30px;
+    font-size: 20px;
+}
+
+#date-deadline{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#date-deadline input{
+    border: none;
+    font-family: inherit;
+    outline: none;
+    font-size: inherit;
 }
