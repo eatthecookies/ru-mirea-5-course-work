@@ -156,13 +156,22 @@ nav a {
     gap: 10%;
 }
 .sidebar__family{
+    margin-top: auto;
+    width: 90%;
+}
+
+.sidebar__family-users{
     display: flex;
     align-items: center;
     width: 90%;
     justify-content: space-between;
     margin-bottom: 10px;
 }
-
+.sidebar__family-title{
+    text-align: center;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
 .sidebar__family-username{
     font-size: 17px;
     font-weight: 600;
@@ -189,13 +198,20 @@ nav a {
     border-radius: 30px;
     background-color: #a2afbd69;
     display: flex;
-    justify-content: space-between;
+    /* justify-content: space-between; */
     padding: 20px 30px;
     width: 100%;
     margin-bottom: 10px;
     align-items: center;
+    gap: 20px;
 }
 
+.tasks__item p{
+    cursor: pointer;
+}
+.tasks__status{
+    margin-left: auto;
+}
 .tasks_checkbox{
     border: none;
     /* outline: 1px solid #1e5180; */
@@ -342,7 +358,11 @@ nav a {
     border: none;
     outline: none;
 }
-
+#modal__for-who{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 .TODO{
     background-color: rgba(255, 196, 0, 0.43);
     padding: 4px;
@@ -390,6 +410,7 @@ nav a {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 20px;
 }
 
 #date-deadline input{

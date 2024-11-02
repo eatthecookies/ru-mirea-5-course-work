@@ -21,7 +21,7 @@ public class TaskService {
     @Autowired
     private TaskRepository taskRepository;
     @Autowired
-    UserService userService;
+    private UserService userService;
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
     @Autowired
@@ -61,6 +61,9 @@ public class TaskService {
             Task task = taskOptional.get();
             task.setTitle(updatedTask.getTitle());
             task.setDescription(updatedTask.getDescription());
+            task.setStatus(updatedTask.getStatus());
+            task.setDeadline(updatedTask.getDeadline());
+            task.setUser(updatedTask.getUser());
             taskRepository.save(task);
             return true;
         }

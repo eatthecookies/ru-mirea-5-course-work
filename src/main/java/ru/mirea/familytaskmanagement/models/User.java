@@ -24,13 +24,8 @@ public class User {
     @JsonIgnore
     @JoinColumn(name = "family_id")
     private Family family;
-
-    @ManyToMany
-    @JoinTable(
-            name = "user_task", // Имя промежуточной таблицы
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "task_id")
-    )
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
     private List<Task> tasks;
 
     public void addTask(Task task){

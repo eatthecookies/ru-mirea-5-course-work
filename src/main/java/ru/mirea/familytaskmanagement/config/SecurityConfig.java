@@ -3,6 +3,7 @@ package ru.mirea.familytaskmanagement.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import ru.mirea.familytaskmanagement.models.UserRole;
 import ru.mirea.familytaskmanagement.services.CustomUserDetailsService;
 
 @Configuration
@@ -23,7 +25,9 @@ public class SecurityConfig {
                 .csrf().disable()
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
-                        .requestMatchers("/register", "/auth/register", "/login").permitAll() // Доступ без авторизации
+                        .requestMatchers("/register", "/auth/register", "/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/**").hasAuthority(UserRole.Взрослый.name())
+                        .requestMatchers(HttpMethod.DELETE, "/api/**").hasAuthority(UserRole.Взрослый.name())
                         .anyRequest().authenticated() // Все остальные страницы требуют авторизации
                 )
                 .formLogin(form -> form

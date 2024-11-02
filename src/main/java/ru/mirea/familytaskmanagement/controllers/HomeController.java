@@ -28,7 +28,11 @@ public class HomeController {
         List <User> familyUsers = user.getFamily().getUsers();
         String familyCode = user.getFamily().getName();
         model.addAttribute("role", user.getRole());
-
+        if (user.getRole() == UserRole.Взрослый) {
+            model.addAttribute("canEdit", true);
+        } else {
+            model.addAttribute("canEdit", false);
+        }
         model.addAttribute("username", user.getUsername());
         model.addAttribute("tasks", tasks);
         model.addAttribute("familyTasks", familyTasks);

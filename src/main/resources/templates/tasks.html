@@ -3,6 +3,8 @@
 
 <head>
   <meta charset="UTF-8">
+  <html xmlns:th="http://www.thymeleaf.org">
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="../static/css/styles.css">
   <title>Управление задачами</title>
@@ -29,14 +31,17 @@
         </div>
         <div class="sidebar__links">
           <a class="sidebar__link" href="">Мои задачи</a>
-          <a class="sidebar__link" href="">Мои задачи</a>
-        </div>
 
-        <div class="sidebar__family" th:each="user : ${familyUsers}">
-          <p class="sidebar__family-username" th:text="${user.username} " >Александр</p>
-          <p class="sidebar__role" th:class="${user.role}" th:text="${user.role}">Родитель</p>
         </div>
+        <div class="sidebar__family">
+          <h2 class="sidebar__family-title">Семья</h2>
 
+
+          <div class="sidebar__family-users" th:each="user : ${familyUsers}">
+            <p class="sidebar__family-username" th:text="${user.username} ">Александр</p>
+            <p class="sidebar__role" th:class="${user.role}" th:text="${user.role}">Родитель</p>
+          </div>
+        </div>
         <div class="sidebar__code">
           <p>Семейный код:</p>
           <p th:text="${code}">LHSD</p>
@@ -48,13 +53,14 @@
         <h1 class="task__title title">Мои задачи</h1>
 
         <div th:each="task : ${tasks}" class="tasks__item" th:onclick="|showTaskDetails(${task.id})|">
+          <p th:if="${canEdit}" th:onclick="|deleteTask(${task.id}, event)|">✕</p>
           <a class="tasks__link-to-item" th:text="${task.title}">Название задачи</a>
           <p class="tasks__status" th:class="${task.status}" th:text="${task.status}">Готово</p>
         </div>
 
-        <div id="taskModal" class="modal" style="display: none" th:onclick="|closeModal()|">
+        <div id="taskModal" class="modal" th:onclick="|closeModal()|">
           <div class="modal__content" th:onclick="|stopPropagation(event)|" data-task-id="">
-            <input type="text" id="modal__title" value="Новая задача">
+            <input type="text" id="modal__title" value="Новая задача" th:disabled="${!canEdit}">
             <div class="modal__task-info-group">
               <label id="modal__status">Статус задачи
                 <select id="modal__status-select">
@@ -63,9 +69,16 @@
                   <option value="Готово">Готово</option>
                 </select>
               </label>
-              <label id="date-deadline"> Дата задачи <input type="date"></label>
+              <label id="date-deadline"> Дедлайн <input th:disabled="${!canEdit}" type="date" id="date-deadline-input"></label>
+
+              <label id="modal__for-who">Статус задачи
+                <select id="modal__user-select" th:disabled="${!canEdit}">
+                  <option th:each="user : ${familyUsers}" th:text="${user.username} " th:value="${user.id} ">TODO</option>
+                </select>
+              </label>
+
             </div>
-            <textarea id="modal__description" class="text-area"></textarea>
+            <textarea id="modal__description" class="text-area" th:disabled="${!canEdit}"></textarea>
           </div>
         </div>
 
@@ -79,26 +92,12 @@
         <h1 class="task__title title">Задачи семьи</h1>
 
         <div th:each="task : ${familyTasks}" class="tasks__item" th:onclick="|showTaskDetails(${task.id})|">
+          <p th:if="${canEdit}"  th:onclick="|deleteTask(${task.id}, event)|">✕</p>
           <a class="tasks__link-to-item" th:text="${task.title}">Название задачи</a>
           <p class="tasks__status" th:class="${task.status}" th:text="${task.status}">Готово</p>
         </div>
 
-        <div id="taskModal" class="modal" style="display: none" th:onclick="|closeModal()|">
-          <div class="modal__content" th:onclick="|stopPropagation(event)|" data-task-id="">
-            <input type="text" id="modal__title" value="Новая задача">
-            <div class="modal__task-info-group">
-              <label id="modal__status">Статус задачи
-                <select id="modal__status-select">
-                  <option value="TODO">TODO</option>
-                  <option value="Выполняется">Выполняется</option>
-                  <option value="Готово">Готово</option>
-                </select>
-              </label>
-              <label id="date-deadline"> Дата задачи <input type="date"></label>
-            </div>
-            <textarea id="modal__description" class="text-area"></textarea>
-          </div>
-        </div>
+
 
 
         <div class="tasks__add-new-item" th:onclick="|showTaskDetails('new')|">
@@ -124,6 +123,9 @@
 
               document.getElementById('modal__status-select').value = task.status;
               document.getElementById('modal__description').value = task.description;
+              document.getElementById('date-deadline-input').value = task.deadline;
+              document.getElementById('modal__user-select').value = task.user.id;
+              console.log(task)
               // Установка ID задачи в атрибут data-task-id
               modalContent.setAttribute('data-task-id', taskId);
 
@@ -146,14 +148,18 @@
         const title = document.getElementById('modal__title').value;
         const description = document.getElementById('modal__description').value;
         const status = document.getElementById('modal__status-select').value;
-
+        const deadline = document.getElementById('date-deadline-input').value;
+        const who = document.getElementById('modal__user-select').value;
+        console.log(deadline, who)
         // Создаем объект данных
         const data = {
           title: title,
           description: description,
-          status: status
+          status: status,
+          deadline: deadline,
+          user: who
         };
-
+        console.log(data)
         if (taskId === "new") {
           // Если ID задачи "new", создаем новую задачу
           fetch(`/api/tasks/create`, {  // Измените URL на соответствующий для создания задачи
@@ -173,8 +179,8 @@
             });
         } else {
           // Если задача уже существует, обновляем ее
-          fetch(`/api/tasks/update/${taskId}`, {
-            method: 'PATCH',
+          fetch(`/api/tasks/${taskId}`, {
+            method: 'PUT',
             headers: {
               'Content-Type': 'application/json'
             },
@@ -189,10 +195,27 @@
               }
             });
         }
-      
+
       }
 
+      function deleteTask(taskId, event) {
+        event.stopPropagation();
 
+        fetch(`/api/tasks/${taskId}`, {  // Измените URL на соответствующий для создания задачи
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+          })
+            .then(response => {
+              if (response.ok) {
+                console.log(`Task ${taskId} deleted successfully`);
+                location.reload(); // Перезагружаем страницу, чтобы обновить список задач
+              } else {
+                console.error(`Failed to delete task ${taskId}`);
+              }
+            });
+      }
 
       function closeModal() {
         updateTask();

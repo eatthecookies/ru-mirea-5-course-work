@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -21,9 +22,11 @@ public class Task {
     private String description;
     private TaskStatus status;
 
-    @JsonIgnore
-    @ManyToMany(mappedBy = "tasks")
-    private List<User> users;
+    private LocalDate deadline;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     // Геттеры и сеттеры
 

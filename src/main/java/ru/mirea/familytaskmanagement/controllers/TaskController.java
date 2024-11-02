@@ -3,6 +3,9 @@ package ru.mirea.familytaskmanagement.controllers;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 import ru.mirea.familytaskmanagement.models.Task;
+import ru.mirea.familytaskmanagement.models.TaskRequest;
+import ru.mirea.familytaskmanagement.models.TaskStatus;
+import ru.mirea.familytaskmanagement.repositories.UserRepository;
 import ru.mirea.familytaskmanagement.services.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,10 +25,20 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
     private UserService userService;
+    @Autowired
+    private UserRepository userRepository;
 
     // Создание новой задачи
     @PostMapping("/create")
-    public ResponseEntity<String> createTask(@RequestBody Task task) {
+    public ResponseEntity<String> createTask(@RequestBody TaskRequest taskRequest) {
+        Task task = new Task();
+        task.setTitle(taskRequest.getTitle());
+        task.setDescription(taskRequest.getDescription());
+        task.setStatus(taskRequest.getStatus());
+        task.setDeadline(taskRequest.getDeadline());
+        userRepository.findById(taskRequest.getUser()).ifPresent(task::setUser);
+
+        // Сохраняем задачу через сервис
         taskService.createTask(task);
         return ResponseEntity.ok("Task created successfully!");
     }
@@ -41,20 +54,16 @@ public class TaskController {
         return ResponseEntity.ok(task);
     }
 
-    @PatchMapping("/update/{id}")
-    public ResponseEntity<String> updateTaskField(@PathVariable Long id, @RequestBody Map<String, Object> updates) {
-        try {
-            taskService.updateTaskField(id, updates);
-            return ResponseEntity.ok("Task updated successfully");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update task");
-        }
-    }
-
 
     // Обновление задачи по ID
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateTask(@PathVariable Long id, @RequestBody Task updatedTask) {
+    public ResponseEntity<String> updateTask(@PathVariable Long id, @RequestBody TaskRequest taskRequest) {
+        Task updatedTask = new Task();
+        updatedTask.setTitle(taskRequest.getTitle());
+        updatedTask.setDescription(taskRequest.getDescription());
+        updatedTask.setStatus(taskRequest.getStatus());
+        updatedTask.setDeadline(taskRequest.getDeadline());
+        userRepository.findById(taskRequest.getUser()).ifPresent(updatedTask::setUser);
         boolean updated = taskService.updateTask(id, updatedTask);
         return updated ? ResponseEntity.ok("Task updated successfully!") : ResponseEntity.notFound().build();
     }
