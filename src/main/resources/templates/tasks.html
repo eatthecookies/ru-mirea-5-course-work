@@ -94,7 +94,7 @@
         <div th:each="task : ${familyTasks}" class="tasks__item" th:onclick="|showTaskDetails(${task.id})|">
           <p th:if="${canEdit}"  th:onclick="|deleteTask(${task.id}, event)|">✕</p>
           <a class="tasks__link-to-item" th:text="${task.title}">Название задачи</a>
-          <p class="tasks__status" th:class="${task.status}" th:text="${task.status}">Готово</p>
+          <p th:class="${task.status}" th:text="${task.status}">Готово</p>
         </div>
 
 

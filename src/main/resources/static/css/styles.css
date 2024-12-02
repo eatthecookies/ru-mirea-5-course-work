@@ -192,6 +192,7 @@ nav a {
     width: 100%;
     text-decoration: none;
     color: #000000;
+    cursor: pointer;
 }
 
 .tasks__item{
@@ -204,12 +205,13 @@ nav a {
     margin-bottom: 10px;
     align-items: center;
     gap: 20px;
+    cursor: pointer;
 }
 
 .tasks__item p{
     cursor: pointer;
 }
-.tasks__status{
+.tasks__item p:last-child{
     margin-left: auto;
 }
 .tasks_checkbox{
